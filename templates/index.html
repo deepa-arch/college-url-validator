@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>College Domain Validator</title>
+</head>
+<body>
+    <h2>Enter College Domain</h2>
+
+    https://www.
+    <input type="text" id="domain" placeholder="iitb.ac.in">
+    <button onclick="checkDomain()">Validate</button>
+
+    <p id="result"></p>
+
+    <script>
+        function validateFormat(domain) {
+            const regex = /^(?!:\/\/)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+            return regex.test(domain);
+        }
+
+        function checkDomain() {
+            const domain = document.getElementById("domain").value;
+            const result = document.getElementById("result");
+
+            if (!validateFormat(domain)) {
+                result.innerText = "❌ Invalid domain format!";
+                return;
+            }
+
+            fetch(`/validate?domain=${domain}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.valid) {
+                        result.innerText = "✅ " + data.message;
+                    } else {
+                        result.innerText = "❌ " + data.message;
+                    }
+                });
+        }
+    </script>
+</body>
+</html>
